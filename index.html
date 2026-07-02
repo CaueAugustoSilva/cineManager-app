@@ -11,67 +11,50 @@
     <link href="./css/style.css" rel="stylesheet" />
   </head>
 
-  <body class="bg-light">
+  <body class="page-home">
     <div id="navbar"></div>
 
     <main class="container py-5">
-      <section class="bg-white rounded shadow p-5 text-center mb-4">
-        <h1 class="display-4 fw-bold">Bem-vindo ao CineManager</h1>
-        <p class="lead mt-3">
-          Gerencie filmes, sessões, clientes e ingressos do cinema em um só
-          lugar.
+      <section class="hero-panel text-center mb-4">
+        <h1 class="hero-title">
+          Bem-vindo ao <span class="hero-highlight">CineManager</span>
+        </h1>
+
+        <p class="hero-text">
+          Gerencie o catálogo de filmes e as sessões do cinema em um ambiente
+          bonito, moderno e agradável de usar.
         </p>
       </section>
 
-      <section class="row g-3">
-        <div class="col-md-4">
-          <a href="./filmes.html" class="text-decoration-none text-dark">
-            <div class="card card-menu h-100">
-              <div class="card-body">
-                <h5 class="card-title">🎬 Filmes</h5>
-                <p class="card-text text-muted">
-                  Cadastre, edite, exclua e consulte filmes do catálogo.
-                </p>
-              </div>
+      <section class="row g-4 justify-content-center">
+        <div class="col-lg-5 col-md-6">
+          <a
+            href="./filmes.html"
+            class="card card-menu h-100 text-decoration-none"
+          >
+            <div class="card-body">
+              <span class="menu-tag">Catálogo</span>
+              <h5 class="card-title">🎬 Filmes</h5>
+              <p class="card-text">
+                Cadastre, edite, exclua e consulte os filmes disponíveis no
+                catálogo do cinema.
+              </p>
             </div>
           </a>
         </div>
 
-        <div class="col-md-4">
-          <a href="./sessoes.html" class="text-decoration-none text-dark">
-            <div class="card card-menu h-100">
-              <div class="card-body">
-                <h5 class="card-title">🕒 Sessões</h5>
-                <p class="card-text text-muted">
-                  Organize horários, salas, preços e consultas de sessões.
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-4">
-          <a href="./clientes.html" class="text-decoration-none text-dark">
-            <div class="card card-menu h-100">
-              <div class="card-body">
-                <h5 class="card-title">👥 Clientes</h5>
-                <p class="card-text text-muted">
-                  Mantenha os dados dos clientes cadastrados.
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-4">
-          <a href="./ingressos.html" class="text-decoration-none text-dark">
-            <div class="card card-menu h-100">
-              <div class="card-body">
-                <h5 class="card-title">🎟️ Ingressos</h5>
-                <p class="card-text text-muted">
-                  Registre compras, assentos e formas de pagamento.
-                </p>
-              </div>
+        <div class="col-lg-5 col-md-6">
+          <a
+            href="./sessoes.html"
+            class="card card-menu h-100 text-decoration-none"
+          >
+            <div class="card-body">
+              <span class="menu-tag">Programação</span>
+              <h5 class="card-title">🕒 Sessões</h5>
+              <p class="card-text">
+                Organize horários, salas, preços e ingressos vendidos por sessão
+                de forma simples e visual.
+              </p>
             </div>
           </a>
         </div>

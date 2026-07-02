@@ -11,81 +11,84 @@
     <link href="./css/style.css" rel="stylesheet" />
   </head>
 
-  <body class="bg-light">
+  <body class="page-sessoes">
     <div id="navbar"></div>
 
     <main class="container py-4">
-      <div
-        class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4"
-      >
-        <div>
-          <h2 class="mb-1">Sessões</h2>
-          <p class="text-muted mb-0">
-            Cadastre sessões vinculadas aos filmes e gere consultas dinâmicas.
-          </p>
-        </div>
-
-        <div class="d-flex flex-column flex-sm-row gap-2">
-          <button
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#modalConsultaSessoes"
-          >
-            Consultar Sessões
-          </button>
-
-          <button
-            class="btn btn-success"
-            data-bs-toggle="modal"
-            data-bs-target="#modalSessao"
-            data-acao="novo"
-          >
-            Nova Sessão
-          </button>
-        </div>
-      </div>
-
-      <div class="card mb-4 d-none" id="cardRelatorioSessoes">
-        <div class="card-body">
-          <div
-            class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3"
-          >
-            <div>
-              <h5 class="mb-1" id="tituloRelatorioSessoes">
-                Resultado da consulta
-              </h5>
-              <p class="text-muted mb-0" id="subtituloRelatorioSessoes"></p>
-            </div>
-
-            <button
-              class="btn btn-outline-secondary btn-sm"
-              id="btnLimparRelatorioSessoes"
-              type="button"
-            >
-              Limpar consulta
-            </button>
+      <section class="content-panel">
+        <div
+          class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4"
+        >
+          <div>
+            <h2 class="page-title">Sessões</h2>
+            <p class="page-subtitle">
+              Organize a programação do cinema com uma visualização agradável e
+              prática.
+            </p>
           </div>
 
-          <div id="resultadoRelatorioSessoes"></div>
-        </div>
-      </div>
+          <div class="d-flex flex-column flex-sm-row gap-2">
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#modalConsultaSessoes"
+            >
+              Consultar Sessões
+            </button>
 
-      <div class="table-responsive">
-        <table class="table table-striped table-hover align-middle">
-          <thead class="table-dark">
-            <tr>
-              <th>ID</th>
-              <th>Filme</th>
-              <th>Data/Hora</th>
-              <th>Sala</th>
-              <th>Preço</th>
-              <th>Ingressos vendidos</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaSessoes"></tbody>
-        </table>
-      </div>
+            <button
+              class="btn btn-success"
+              data-bs-toggle="modal"
+              data-bs-target="#modalSessao"
+              data-acao="novo"
+            >
+              Nova Sessão
+            </button>
+          </div>
+        </div>
+
+        <div class="card mb-4 d-none" id="cardRelatorioSessoes">
+          <div class="card-body">
+            <div
+              class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3"
+            >
+              <div>
+                <h5 class="mb-1" id="tituloRelatorioSessoes">
+                  Resultado da consulta
+                </h5>
+                <p class="text-muted mb-0" id="subtituloRelatorioSessoes"></p>
+              </div>
+
+              <button
+                class="btn btn-outline-secondary btn-sm"
+                id="btnLimparRelatorioSessoes"
+                type="button"
+              >
+                Limpar consulta
+              </button>
+            </div>
+
+            <div id="resultadoRelatorioSessoes"></div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Filme</th>
+                <th>Data/Hora</th>
+                <th>Sala</th>
+                <th>Preço</th>
+                <th>Ingressos vendidos</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabelaSessoes"></tbody>
+          </table>
+        </div>
+      </section>
     </main>
 
     <div
@@ -94,7 +97,7 @@
       tabindex="-1"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Consulta de Sessões</h5>
@@ -107,31 +110,101 @@
           </div>
 
           <div class="modal-body">
-            <p class="text-muted">Escolha qual relatório deseja gerar:</p>
+            <p class="text-muted">
+              Escolha uma opção de consulta para visualizar os resultados.
+            </p>
 
-            <div class="d-grid gap-2">
-              <button
-                class="btn btn-outline-primary text-start"
-                id="btnAbrirConsultaSessoesPorFilme"
-                type="button"
-              >
-                <strong>Filtrar por Filme</strong><br />
-                <span class="text-muted"
-                  >Escolha um filme e veja todas as sessões cadastradas para
-                  ele.</span
+            <div class="row g-3">
+              <div class="col-md-6">
+                <button
+                  class="btn btn-outline-primary text-start w-100 h-100"
+                  id="btnAbrirConsultaSessoesPorFilme"
+                  type="button"
                 >
-              </button>
+                  <strong>Sessões por filme</strong><br />
+                  <span class="text-muted"
+                    >Escolha um filme para ver suas sessões cadastradas.</span
+                  >
+                </button>
+              </div>
 
-              <button
-                class="btn btn-outline-warning text-start"
-                id="btnConsultaSessoesMaisVendidas"
-                type="button"
-              >
-                <strong>Sessões com Maior Faturamento</strong><br />
-                <span class="text-muted"
-                  >Lista sessões com faturamento acima de R$ 1.000,00.</span
+              <div class="col-md-6">
+                <button
+                  class="btn btn-outline-primary text-start w-100 h-100"
+                  id="btnAbrirConsultaSessoesPorData"
+                  type="button"
                 >
-              </button>
+                  <strong>Sessões por intervalo de data</strong><br />
+                  <span class="text-muted"
+                    >Filtre sessões dentro de um período.</span
+                  >
+                </button>
+              </div>
+
+              <div class="col-md-6">
+                <button
+                  class="btn btn-outline-primary text-start w-100 h-100"
+                  id="btnAbrirConsultaSessoesPorSala"
+                  type="button"
+                >
+                  <strong>Sessões por sala</strong><br />
+                  <span class="text-muted"
+                    >Veja a programação de uma sala específica.</span
+                  >
+                </button>
+              </div>
+
+              <div class="col-md-6">
+                <button
+                  class="btn btn-outline-primary text-start w-100 h-100"
+                  id="btnAbrirConsultaSessoesPorPreco"
+                  type="button"
+                >
+                  <strong>Sessões por preço máximo</strong><br />
+                  <span class="text-muted"
+                    >Encontre sessões até um valor definido.</span
+                  >
+                </button>
+              </div>
+
+              <div class="col-md-6">
+                <button
+                  class="btn btn-outline-primary text-start w-100 h-100"
+                  id="btnAbrirConsultaSessoesPorGenero"
+                  type="button"
+                >
+                  <strong>Sessões por gênero do filme</strong><br />
+                  <span class="text-muted"
+                    >Veja sessões de filmes de um gênero específico.</span
+                  >
+                </button>
+              </div>
+
+              <div class="col-md-6">
+                <button
+                  class="btn btn-outline-primary text-start w-100 h-100"
+                  id="btnConsultaSessoesSemVenda"
+                  type="button"
+                >
+                  <strong>Sessões sem venda</strong><br />
+                  <span class="text-muted"
+                    >Veja sessões que ainda não venderam ingressos.</span
+                  >
+                </button>
+              </div>
+
+              <div class="col-md-6">
+                <button
+                  class="btn btn-outline-primary text-start w-100 h-100"
+                  id="btnConsultaSessoesMaisVendidas"
+                  type="button"
+                >
+                  <strong>Sessões com maior faturamento</strong><br />
+                  <span class="text-muted"
+                    >Veja quais sessões geraram mais receita.</span
+                  >
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -161,6 +234,171 @@
               Selecione um filme para consultar suas sessões:
             </p>
             <div class="d-grid gap-2" id="listaFilmesSessoes"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="modalDataSessoes"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Consultar Sessões por Data</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="formConsultaDataSessoes">
+              <div class="mb-3">
+                <label class="form-label" for="dataInicioSessoes"
+                  >Data inicial</label
+                >
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  id="dataInicioSessoes"
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label" for="dataFimSessoes"
+                  >Data final</label
+                >
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  id="dataFimSessoes"
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">
+                Pesquisar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="modalSalaSessoes"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Consultar Sessões por Sala</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="formConsultaSalaSessoes">
+              <div class="mb-3">
+                <label class="form-label" for="inputSalaSessoes"
+                  >Número da sala</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="inputSalaSessoes"
+                  min="1"
+                  step="1"
+                  required
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">
+                Pesquisar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="modalPrecoSessoes"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Consultar Sessões por Preço</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="formConsultaPrecoSessoes">
+              <div class="mb-3">
+                <label class="form-label" for="inputPrecoMaximoSessoes"
+                  >Preço máximo</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="inputPrecoMaximoSessoes"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">
+                Pesquisar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="modalGenerosSessoes"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Escolha o Gênero</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <p class="text-muted">
+              Selecione o gênero do filme para consultar as sessões:
+            </p>
+            <div class="d-grid gap-2" id="listaGenerosSessoes"></div>
           </div>
         </div>
       </div>
