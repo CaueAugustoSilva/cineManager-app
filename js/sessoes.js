@@ -29,10 +29,25 @@ const tituloModal = document.getElementById("tituloModalSessao");
 
 const modalConsultaSessoesEl = document.getElementById("modalConsultaSessoes");
 const modalConsultaSessoes = new bootstrap.Modal(modalConsultaSessoesEl);
+
 const modalFilmesSessoesEl = document.getElementById("modalFilmesSessoes");
 const modalFilmesSessoes = new bootstrap.Modal(modalFilmesSessoesEl);
 
+const modalDataSessoesEl = document.getElementById("modalDataSessoes");
+const modalDataSessoes = new bootstrap.Modal(modalDataSessoesEl);
+
+const modalSalaSessoesEl = document.getElementById("modalSalaSessoes");
+const modalSalaSessoes = new bootstrap.Modal(modalSalaSessoesEl);
+
+const modalPrecoSessoesEl = document.getElementById("modalPrecoSessoes");
+const modalPrecoSessoes = new bootstrap.Modal(modalPrecoSessoesEl);
+
+const modalGenerosSessoesEl = document.getElementById("modalGenerosSessoes");
+const modalGenerosSessoes = new bootstrap.Modal(modalGenerosSessoesEl);
+
 const listaFilmesSessoes = document.getElementById("listaFilmesSessoes");
+const listaGenerosSessoes = document.getElementById("listaGenerosSessoes");
+
 const cardRelatorioSessoes = document.getElementById("cardRelatorioSessoes");
 const tituloRelatorioSessoes = document.getElementById(
   "tituloRelatorioSessoes",
@@ -46,15 +61,50 @@ const resultadoRelatorioSessoes = document.getElementById(
 const btnLimparRelatorioSessoes = document.getElementById(
   "btnLimparRelatorioSessoes",
 );
+
 const btnAbrirConsultaSessoesPorFilme = document.getElementById(
   "btnAbrirConsultaSessoesPorFilme",
+);
+const btnAbrirConsultaSessoesPorData = document.getElementById(
+  "btnAbrirConsultaSessoesPorData",
+);
+const btnAbrirConsultaSessoesPorSala = document.getElementById(
+  "btnAbrirConsultaSessoesPorSala",
+);
+const btnAbrirConsultaSessoesPorPreco = document.getElementById(
+  "btnAbrirConsultaSessoesPorPreco",
+);
+const btnAbrirConsultaSessoesPorGenero = document.getElementById(
+  "btnAbrirConsultaSessoesPorGenero",
+);
+const btnConsultaSessoesSemVenda = document.getElementById(
+  "btnConsultaSessoesSemVenda",
 );
 const btnConsultaSessoesMaisVendidas = document.getElementById(
   "btnConsultaSessoesMaisVendidas",
 );
 
+const formConsultaDataSessoes = document.getElementById(
+  "formConsultaDataSessoes",
+);
+const dataInicioSessoes = document.getElementById("dataInicioSessoes");
+const dataFimSessoes = document.getElementById("dataFimSessoes");
+
+const formConsultaSalaSessoes = document.getElementById(
+  "formConsultaSalaSessoes",
+);
+const inputSalaSessoes = document.getElementById("inputSalaSessoes");
+
+const formConsultaPrecoSessoes = document.getElementById(
+  "formConsultaPrecoSessoes",
+);
+const inputPrecoMaximoSessoes = document.getElementById(
+  "inputPrecoMaximoSessoes",
+);
+
 let sessoes = [];
 let filmes = [];
+let generosDisponiveis = [];
 
 async function carregarFilmesSelect() {
   try {
@@ -98,8 +148,25 @@ async function carregarSessoes() {
                 <td>${formatarMoeda(sessao.preco)}</td>
                 <td>${Number(sessao.ingressos_vendidos ?? 0)}</td>
                 <td>
-                    <button class="btn btn-warning btn-sm" data-acao="editar" data-id="${sessao.id_sessao}">Editar</button>
-                    <button class="btn btn-danger btn-sm" data-acao="excluir" data-id="${sessao.id_sessao}">Excluir</button>
+                    <div class="acoes-tabela">
+                        <button 
+                            class="btn-acao btn-editar" 
+                            data-acao="editar" 
+                            data-id="${sessao.id_sessao}"
+                            title="Editar sessão"
+                            aria-label="Editar sessão">
+                            <span class="icone-acao">✎</span>
+                        </button>
+
+                        <button 
+                            class="btn-acao btn-excluir" 
+                            data-acao="excluir" 
+                            data-id="${sessao.id_sessao}"
+                            title="Excluir sessão"
+                            aria-label="Excluir sessão">
+                            <span class="icone-excluir">×</span>
+                        </button>
+                    </div>
                 </td>
             </tr>
         `,
@@ -128,6 +195,18 @@ function preencherFormulario(sessao) {
   document.getElementById("preco").value = sessao.preco ?? "";
   document.getElementById("ingressos").value = sessao.ingressos_vendidos ?? 0;
   tituloModal.textContent = "Editar Sessão";
+}
+
+function abrirModalDepoisDeFechar(modalAtualEl, modalAtual, modalDestino) {
+  modalAtualEl.addEventListener(
+    "hidden.bs.modal",
+    () => {
+      modalDestino.show();
+    },
+    { once: true },
+  );
+
+  modalAtual.hide();
 }
 
 function mostrarMensagemRelatorio(titulo, mensagem) {
@@ -175,6 +254,17 @@ function renderizarTabelaRelatorioSessoes(titulo, subtitulo, colunas, linhas) {
   cardRelatorioSessoes.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function linhasSessoesTabelaUnica(listaSessoes) {
+  return listaSessoes.map((sessao) => [
+    sessao.id_sessao,
+    sessao.id_filme,
+    formatarDataHora(sessao.data_hora),
+    Number(sessao.sala),
+    formatarMoeda(sessao.preco),
+    Number(sessao.ingressos_vendidos ?? 0),
+  ]);
+}
+
 function prepararModalFilmesSessoes() {
   const filmesOrdenados = [...filmes].sort((a, b) =>
     a.titulo.localeCompare(b.titulo, "pt-BR"),
@@ -188,8 +278,29 @@ function prepararModalFilmesSessoes() {
   listaFilmesSessoes.innerHTML = filmesOrdenados
     .map(
       (filme) => `
-        <button class="btn btn-outline-dark text-start" type="button" data-id-filme="${filme.id_filme}">
+        <button class="btn btn-outline-primary text-start" type="button" data-id-filme="${filme.id_filme}">
             ${escapeHTML(filme.titulo)}
+        </button>
+    `,
+    )
+    .join("");
+}
+
+function prepararModalGenerosSessoes() {
+  generosDisponiveis = [
+    ...new Set(filmes.map((filme) => filme.genero).filter(Boolean)),
+  ].sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+  if (generosDisponiveis.length === 0) {
+    listaGenerosSessoes.innerHTML = `<p class="text-muted mb-0">Nenhum gênero cadastrado no sistema.</p>`;
+    return;
+  }
+
+  listaGenerosSessoes.innerHTML = generosDisponiveis
+    .map(
+      (genero, index) => `
+        <button class="btn btn-outline-primary text-start" type="button" data-genero-index="${index}">
+            ${escapeHTML(genero)}
         </button>
     `,
     )
@@ -228,7 +339,7 @@ function renderizarRelatorioSessoesPorFilme(idFilme) {
 
   renderizarTabelaRelatorioSessoes(
     `Sessões do filme: ${filmeSelecionado?.titulo ?? "Filme selecionado"}`,
-    `Total encontrado: ${sessoesFiltradas.length}`,
+    `Total encontrado: ${sessoesFiltradas.length}.`,
     [
       "ID",
       "Filme",
@@ -242,10 +353,179 @@ function renderizarRelatorioSessoesPorFilme(idFilme) {
   );
 }
 
+async function consultarSessoesPorData(dataInicio, dataFim) {
+  let consulta = supabase
+    .from("sessoes")
+    .select("id_sessao, id_filme, data_hora, sala, preco, ingressos_vendidos")
+    .order("data_hora", { ascending: true });
+
+  if (dataInicio) {
+    consulta = consulta.gte("data_hora", dataInicio);
+  }
+
+  if (dataFim) {
+    consulta = consulta.lte("data_hora", dataFim);
+  }
+
+  const { data, error } = await consulta;
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+async function consultarSessoesPorSala(sala) {
+  const { data, error } = await supabase
+    .from("sessoes")
+    .select("id_sessao, id_filme, data_hora, sala, preco, ingressos_vendidos")
+    .eq("sala", sala)
+    .order("data_hora", { ascending: true });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+async function consultarSessoesPorPreco(precoMaximo) {
+  const { data, error } = await supabase
+    .from("sessoes")
+    .select("id_sessao, id_filme, data_hora, sala, preco, ingressos_vendidos")
+    .lte("preco", precoMaximo)
+    .order("preco", { ascending: true });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+async function consultarSessoesPorGenero(genero) {
+  const { data, error } = await supabase
+    .from("sessoes")
+    .select(
+      `
+            id_sessao,
+            data_hora,
+            sala,
+            preco,
+            ingressos_vendidos,
+            filmes!inner (
+                titulo,
+                genero,
+                classificacao
+            )
+        `,
+    )
+    .eq("filmes.genero", genero)
+    .order("data_hora", { ascending: true });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+async function relatorioSessoesPorGenero(genero) {
+  modalGenerosSessoes.hide();
+  mostrarMensagemRelatorio(
+    `Sessões do gênero: ${genero}`,
+    "Carregando relatório...",
+  );
+
+  try {
+    const sessoesFiltradas = await consultarSessoesPorGenero(genero);
+
+    const linhas = sessoesFiltradas.map((sessao) => [
+      sessao.id_sessao,
+      escapeHTML(sessao.filmes?.titulo ?? "Filme não encontrado"),
+      escapeHTML(sessao.filmes?.genero ?? ""),
+      escapeHTML(sessao.filmes?.classificacao ?? ""),
+      formatarDataHora(sessao.data_hora),
+      Number(sessao.sala),
+      formatarMoeda(sessao.preco),
+      Number(sessao.ingressos_vendidos ?? 0),
+    ]);
+
+    renderizarTabelaRelatorioSessoes(
+      `Sessões do gênero: ${genero}`,
+      `Total encontrado: ${sessoesFiltradas.length}.`,
+      [
+        "ID",
+        "Filme",
+        "Gênero",
+        "Classificação",
+        "Data/Hora",
+        "Sala",
+        "Preço",
+        "Ingressos",
+      ],
+      linhas,
+    );
+  } catch (erro) {
+    mostrarErro(erro, "Não foi possível consultar sessões por gênero");
+    mostrarMensagemRelatorio(
+      `Sessões do gênero: ${genero}`,
+      "Erro ao gerar relatório.",
+    );
+  }
+}
+
+async function relatorioSessoesSemVenda() {
+  modalConsultaSessoes.hide();
+  mostrarMensagemRelatorio("Sessões sem venda", "Carregando relatório...");
+
+  try {
+    const { data, error } = await supabase
+      .from("sessoes")
+      .select(
+        `
+                id_sessao,
+                data_hora,
+                sala,
+                preco,
+                ingressos_vendidos,
+                filmes (
+                    titulo,
+                    genero,
+                    classificacao
+                )
+            `,
+      )
+      .eq("ingressos_vendidos", 0)
+      .order("data_hora", { ascending: true });
+
+    if (error) throw error;
+
+    const linhas = (data ?? []).map((sessao) => [
+      sessao.id_sessao,
+      escapeHTML(sessao.filmes?.titulo ?? "Filme não encontrado"),
+      escapeHTML(sessao.filmes?.genero ?? ""),
+      escapeHTML(sessao.filmes?.classificacao ?? ""),
+      formatarDataHora(sessao.data_hora),
+      Number(sessao.sala),
+      formatarMoeda(sessao.preco),
+      Number(sessao.ingressos_vendidos ?? 0),
+    ]);
+
+    renderizarTabelaRelatorioSessoes(
+      "Sessões sem venda",
+      `Total encontrado: ${(data ?? []).length}.`,
+      [
+        "ID",
+        "Filme",
+        "Gênero",
+        "Classificação",
+        "Data/Hora",
+        "Sala",
+        "Preço",
+        "Ingressos",
+      ],
+      linhas,
+    );
+  } catch (erro) {
+    mostrarErro(erro, "Não foi possível consultar sessões sem venda");
+    mostrarMensagemRelatorio("Sessões sem venda", "Erro ao gerar relatório.");
+  }
+}
+
 async function relatorioSessoesMaisVendidas() {
   modalConsultaSessoes.hide();
   mostrarMensagemRelatorio(
-    "Sessões com Maior Faturamento",
+    "Sessões com maior faturamento",
     "Carregando relatório...",
   );
 
@@ -286,11 +566,16 @@ async function relatorioSessoesMaisVendidas() {
       );
     });
 
-    const sessoesMaisVendidas = Object.values(agrupado)
-      .filter((sessao) => sessao.faturamento > 1000)
-      .sort((a, b) => b.faturamento - a.faturamento);
+    const sessoesMaisVendidas = Object.values(agrupado).sort((a, b) => {
+      if (b.faturamento !== a.faturamento) {
+        return b.faturamento - a.faturamento;
+      }
 
-    const linhas = sessoesMaisVendidas.map((sessao) => [
+      return b.quantidadeIngressos - a.quantidadeIngressos;
+    });
+
+    const linhas = sessoesMaisVendidas.map((sessao, index) => [
+      index + 1,
       sessao.id_sessao,
       escapeHTML(sessao.filmes?.titulo ?? "Filme não encontrado"),
       formatarDataHora(sessao.data_hora),
@@ -301,9 +586,18 @@ async function relatorioSessoesMaisVendidas() {
     ]);
 
     renderizarTabelaRelatorioSessoes(
-      "Sessões com Maior Faturamento",
-      "Filtro aplicado: sessões com faturamento acima de R$ 1.000,00.",
-      ["ID", "Filme", "Data/Hora", "Sala", "Preço", "Ingressos", "Faturamento"],
+      "Sessões com maior faturamento",
+      "Ranking por faturamento total.",
+      [
+        "Posição",
+        "ID",
+        "Filme",
+        "Data/Hora",
+        "Sala",
+        "Preço",
+        "Ingressos",
+        "Faturamento",
+      ],
       linhas,
     );
   } catch (erro) {
@@ -312,7 +606,7 @@ async function relatorioSessoesMaisVendidas() {
       "Não foi possível gerar o relatório de sessões com maior faturamento",
     );
     mostrarMensagemRelatorio(
-      "Sessões com Maior Faturamento",
+      "Sessões com maior faturamento",
       "Erro ao gerar relatório.",
     );
   }
@@ -389,17 +683,51 @@ form.addEventListener("submit", async (event) => {
 
 btnAbrirConsultaSessoesPorFilme.addEventListener("click", () => {
   prepararModalFilmesSessoes();
-
-  modalConsultaSessoesEl.addEventListener(
-    "hidden.bs.modal",
-    () => {
-      modalFilmesSessoes.show();
-    },
-    { once: true },
+  abrirModalDepoisDeFechar(
+    modalConsultaSessoesEl,
+    modalConsultaSessoes,
+    modalFilmesSessoes,
   );
-
-  modalConsultaSessoes.hide();
 });
+
+btnAbrirConsultaSessoesPorData.addEventListener("click", () => {
+  dataInicioSessoes.value = "";
+  dataFimSessoes.value = "";
+  abrirModalDepoisDeFechar(
+    modalConsultaSessoesEl,
+    modalConsultaSessoes,
+    modalDataSessoes,
+  );
+});
+
+btnAbrirConsultaSessoesPorSala.addEventListener("click", () => {
+  inputSalaSessoes.value = "";
+  abrirModalDepoisDeFechar(
+    modalConsultaSessoesEl,
+    modalConsultaSessoes,
+    modalSalaSessoes,
+  );
+});
+
+btnAbrirConsultaSessoesPorPreco.addEventListener("click", () => {
+  inputPrecoMaximoSessoes.value = "";
+  abrirModalDepoisDeFechar(
+    modalConsultaSessoesEl,
+    modalConsultaSessoes,
+    modalPrecoSessoes,
+  );
+});
+
+btnAbrirConsultaSessoesPorGenero.addEventListener("click", () => {
+  prepararModalGenerosSessoes();
+  abrirModalDepoisDeFechar(
+    modalConsultaSessoesEl,
+    modalConsultaSessoes,
+    modalGenerosSessoes,
+  );
+});
+
+btnConsultaSessoesSemVenda.addEventListener("click", relatorioSessoesSemVenda);
 
 btnConsultaSessoesMaisVendidas.addEventListener(
   "click",
@@ -413,6 +741,107 @@ listaFilmesSessoes.addEventListener("click", (event) => {
   const idFilme = Number(botao.dataset.idFilme);
   modalFilmesSessoes.hide();
   renderizarRelatorioSessoesPorFilme(idFilme);
+});
+
+listaGenerosSessoes.addEventListener("click", (event) => {
+  const botao = event.target.closest("button[data-genero-index]");
+  if (!botao) return;
+
+  const genero = generosDisponiveis[Number(botao.dataset.generoIndex)];
+  relatorioSessoesPorGenero(genero);
+});
+
+formConsultaDataSessoes.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const inicio = dataInicioSessoes.value;
+  const fim = dataFimSessoes.value;
+
+  if (!inicio && !fim) {
+    alert("Informe pelo menos uma data para realizar a consulta.");
+    return;
+  }
+
+  modalDataSessoes.hide();
+  mostrarMensagemRelatorio(
+    "Sessões por intervalo de data",
+    "Carregando relatório...",
+  );
+
+  try {
+    const resultado = await consultarSessoesPorData(inicio, fim);
+
+    renderizarTabelaRelatorioSessoes(
+      "Sessões por intervalo de data",
+      `Total encontrado: ${resultado.length}.`,
+      ["ID", "ID Filme", "Data/Hora", "Sala", "Preço", "Ingressos"],
+      linhasSessoesTabelaUnica(resultado),
+    );
+  } catch (erro) {
+    mostrarErro(erro, "Não foi possível consultar sessões por data");
+    mostrarMensagemRelatorio(
+      "Sessões por intervalo de data",
+      "Erro ao gerar relatório.",
+    );
+  }
+});
+
+formConsultaSalaSessoes.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const sala = Number(inputSalaSessoes.value);
+
+  modalSalaSessoes.hide();
+  mostrarMensagemRelatorio(
+    `Sessões da sala ${sala}`,
+    "Carregando relatório...",
+  );
+
+  try {
+    const resultado = await consultarSessoesPorSala(sala);
+
+    renderizarTabelaRelatorioSessoes(
+      `Sessões da sala ${sala}`,
+      `Total encontrado: ${resultado.length}.`,
+      ["ID", "ID Filme", "Data/Hora", "Sala", "Preço", "Ingressos"],
+      linhasSessoesTabelaUnica(resultado),
+    );
+  } catch (erro) {
+    mostrarErro(erro, "Não foi possível consultar sessões por sala");
+    mostrarMensagemRelatorio(
+      `Sessões da sala ${sala}`,
+      "Erro ao gerar relatório.",
+    );
+  }
+});
+
+formConsultaPrecoSessoes.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const precoMaximo = Number(inputPrecoMaximoSessoes.value);
+
+  modalPrecoSessoes.hide();
+  mostrarMensagemRelatorio(
+    `Sessões até ${formatarMoeda(precoMaximo)}`,
+    "Carregando relatório...",
+  );
+
+  try {
+    const resultado = await consultarSessoesPorPreco(precoMaximo);
+
+    renderizarTabelaRelatorioSessoes(
+      `Sessões até ${formatarMoeda(precoMaximo)}`,
+      `Total encontrado: ${resultado.length}.`,
+      ["ID", "ID Filme", "Data/Hora", "Sala", "Preço", "Ingressos"],
+      linhasSessoesTabelaUnica(resultado),
+    );
+  } catch (erro) {
+    mostrarErro(erro, "Não foi possível consultar sessões por preço");
+    mostrarMensagemRelatorio(
+      `Sessões até ${formatarMoeda(precoMaximo)}`,
+      "Erro ao gerar relatório.",
+    );
+  }
 });
 
 btnLimparRelatorioSessoes.addEventListener("click", () => {

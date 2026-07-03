@@ -11,82 +11,84 @@
     <link href="./css/style.css" rel="stylesheet" />
   </head>
 
-  <body class="bg-light">
+  <body class="page-filmes">
     <div id="navbar"></div>
 
     <main class="container py-4">
-      <div
-        class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4"
-      >
-        <div>
-          <h2 class="mb-1">Catálogo de Filmes</h2>
-          <p class="text-muted mb-0">
-            CRUD completo da tabela <strong>filmes</strong> com consultas
-            dinâmicas.
-          </p>
-        </div>
-
-        <div class="d-flex flex-column flex-sm-row gap-2">
-          <button
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#modalConsultaFilmes"
-          >
-            Consultar Filmes
-          </button>
-
-          <button
-            class="btn btn-success"
-            data-bs-toggle="modal"
-            data-bs-target="#modalFilme"
-            data-acao="novo"
-          >
-            Cadastrar Novo Filme
-          </button>
-        </div>
-      </div>
-
-      <div class="card mb-4 d-none" id="cardRelatorioFilmes">
-        <div class="card-body">
-          <div
-            class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3"
-          >
-            <div>
-              <h5 class="mb-1" id="tituloRelatorioFilmes">
-                Resultado da consulta
-              </h5>
-              <p class="text-muted mb-0" id="subtituloRelatorioFilmes"></p>
-            </div>
-
-            <button
-              class="btn btn-outline-secondary btn-sm"
-              id="btnLimparRelatorioFilmes"
-              type="button"
-            >
-              Limpar consulta
-            </button>
+      <section class="content-panel">
+        <div
+          class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4"
+        >
+          <div>
+            <h2 class="page-title">Catálogo de Filmes</h2>
+            <p class="page-subtitle">
+              Cadastre, edite, exclua e consulte os filmes do cinema com
+              conforto visual e boa organização.
+            </p>
           </div>
 
-          <div id="resultadoRelatorioFilmes"></div>
-        </div>
-      </div>
+          <div class="d-flex flex-column flex-sm-row gap-2">
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#modalConsultaFilmes"
+            >
+              Consultar Filmes
+            </button>
 
-      <div class="table-responsive">
-        <table class="table table-striped table-hover align-middle">
-          <thead class="table-dark">
-            <tr>
-              <th>ID</th>
-              <th>Título</th>
-              <th>Gênero</th>
-              <th>Duração</th>
-              <th>Classificação</th>
-              <th>Diretor</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaFilmes"></tbody>
-        </table>
-      </div>
+            <button
+              class="btn btn-success"
+              data-bs-toggle="modal"
+              data-bs-target="#modalFilme"
+              data-acao="novo"
+            >
+              Cadastrar Novo Filme
+            </button>
+          </div>
+        </div>
+
+        <div class="card mb-4 d-none" id="cardRelatorioFilmes">
+          <div class="card-body">
+            <div
+              class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3"
+            >
+              <div>
+                <h5 class="mb-1" id="tituloRelatorioFilmes">
+                  Resultado da consulta
+                </h5>
+                <p class="text-muted mb-0" id="subtituloRelatorioFilmes"></p>
+              </div>
+
+              <button
+                class="btn btn-outline-secondary btn-sm"
+                id="btnLimparRelatorioFilmes"
+                type="button"
+              >
+                Limpar consulta
+              </button>
+            </div>
+
+            <div id="resultadoRelatorioFilmes"></div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Gênero</th>
+                <th>Duração</th>
+                <th>Classificação</th>
+                <th>Diretor</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabelaFilmes"></tbody>
+          </table>
+        </div>
+      </section>
     </main>
 
     <div
@@ -95,7 +97,7 @@
       tabindex="-1"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Consulta de Filmes</h5>
@@ -108,32 +110,118 @@
           </div>
 
           <div class="modal-body">
-            <p class="text-muted">Escolha qual relatório deseja gerar:</p>
+            <p class="text-muted">
+              Escolha uma opção de consulta para visualizar os resultados.
+            </p>
 
-            <div class="d-grid gap-2">
-              <button
-                class="btn btn-outline-primary text-start"
-                id="btnAbrirConsultaGenero"
-                type="button"
-              >
-                <strong>Filtrar por Gênero</strong><br />
-                <span class="text-muted"
-                  >Escolha um gênero cadastrado e veja todos os filmes
-                  correspondentes.</span
+            <div class="row g-3">
+              <div class="col-md-6">
+                <button
+                  class="btn btn-outline-primary text-start w-100 h-100"
+                  id="btnAbrirBuscaTituloFilmes"
+                  type="button"
                 >
-              </button>
+                  <strong>Buscar filme pelo título</strong><br />
+                  <span class="text-muted"
+                    >Pesquise por parte do nome do filme.</span
+                  >
+                </button>
+              </div>
 
-              <button
-                class="btn btn-outline-warning text-start"
-                id="btnConsultaFilmesMaisVendidos"
-                type="button"
-              >
-                <strong>Filmes Mais Vendidos</strong><br />
-                <span class="text-muted"
-                  >Lista filmes com faturamento acima de R$ 1.000,00.</span
+              <div class="col-md-6">
+                <button
+                  class="btn btn-outline-primary text-start w-100 h-100"
+                  id="btnAbrirConsultaGenero"
+                  type="button"
                 >
-              </button>
+                  <strong>Filtrar por gênero</strong><br />
+                  <span class="text-muted"
+                    >Escolha um gênero disponível no catálogo.</span
+                  >
+                </button>
+              </div>
+
+              <div class="col-md-6">
+                <button
+                  class="btn btn-outline-primary text-start w-100 h-100"
+                  id="btnAbrirConsultaClassificacaoFilmes"
+                  type="button"
+                >
+                  <strong>Filtrar por classificação</strong><br />
+                  <span class="text-muted"
+                    >Veja filmes por classificação indicativa.</span
+                  >
+                </button>
+              </div>
+
+              <div class="col-md-6">
+                <button
+                  class="btn btn-outline-primary text-start w-100 h-100"
+                  id="btnConsultaFilmesMaisVendidos"
+                  type="button"
+                >
+                  <strong>Filmes mais vendidos</strong><br />
+                  <span class="text-muted"
+                    >Veja o ranking por quantidade de ingressos vendidos.</span
+                  >
+                </button>
+              </div>
+
+              <div class="col-md-6">
+                <button
+                  class="btn btn-outline-primary text-start w-100 h-100"
+                  id="btnConsultaFilmesMaiorFaturamento"
+                  type="button"
+                >
+                  <strong>Filmes com maior faturamento</strong><br />
+                  <span class="text-muted"
+                    >Veja quais filmes geraram mais receita.</span
+                  >
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="modalBuscaTituloFilmes"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Buscar Filme pelo Título</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="formBuscaTituloFilmes">
+              <div class="mb-3">
+                <label class="form-label" for="inputTituloFilmeConsulta"
+                  >Digite parte do título</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputTituloFilmeConsulta"
+                  placeholder="Ex.: Avatar, Batman, Homem..."
+                  required
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">
+                Pesquisar
+              </button>
+            </form>
           </div>
         </div>
       </div>
@@ -162,6 +250,34 @@
               Selecione um dos gêneros disponíveis no sistema:
             </p>
             <div class="d-grid gap-2" id="listaGenerosFilmes"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="modalClassificacaoFilmes"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Escolha a Classificação</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <p class="text-muted">
+              Selecione uma classificação indicativa disponível no sistema:
+            </p>
+            <div class="d-grid gap-2" id="listaClassificacoesFilmes"></div>
           </div>
         </div>
       </div>
