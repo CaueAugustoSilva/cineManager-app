@@ -1,31 +1,35 @@
 <nav class="navbar navbar-expand-lg navbar-dark navbar-cinema fixed-top">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="./index.html">🎬 CineManager</a>
+  <div class="container-fluid px-4">
+    <a
+      class="navbar-brand fw-bold d-flex align-items-center gap-2"
+      href="index.html"
+    >
+      <span style="font-size: 1.2rem">🎬</span>
+      <span>CineManager</span>
+    </a>
 
     <button
       class="navbar-toggler"
       type="button"
       data-bs-toggle="collapse"
-      data-bs-target="#menu"
-      aria-controls="menu"
+      data-bs-target="#navbarCinema"
+      aria-controls="navbarCinema"
       aria-expanded="false"
-      aria-label="Abrir menu"
+      aria-label="Alternar navegação"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="menu">
-      <ul class="navbar-nav ms-auto">
+    <div class="collapse navbar-collapse" id="navbarCinema">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="./index.html">Início</a>
+          <a class="nav-link" href="index.html">Início</a>
         </li>
-
         <li class="nav-item">
-          <a class="nav-link" href="./filmes.html">Filmes</a>
+          <a class="nav-link" href="filmes.html">Filmes</a>
         </li>
-
         <li class="nav-item">
-          <a class="nav-link" href="./sessoes.html">Sessões</a>
+          <a class="nav-link" href="sessoes.html">Sessões</a>
         </li>
       </ul>
     </div>
