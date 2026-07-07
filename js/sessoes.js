@@ -8,6 +8,7 @@ import {
   cadastrarSessao,
   atualizarSessao,
   excluirSessao,
+  consultarSessoesSemIngressosRegistrados,
 } from "./supabaseService.js";
 
 import {
@@ -466,35 +467,19 @@ async function relatorioSessoesPorGenero(genero) {
 
 async function relatorioSessoesSemVenda() {
   modalConsultaSessoes.hide();
-  mostrarMensagemRelatorio("Sessões sem venda", "Carregando relatório...");
+  mostrarMensagemRelatorio(
+    "Sessões sem ingresso registrado",
+    "Carregando relatório...",
+  );
 
   try {
-    const { data, error } = await supabase
-      .from("sessoes")
-      .select(
-        `
-                id_sessao,
-                data_hora,
-                sala,
-                preco,
-                ingressos_vendidos,
-                filmes (
-                    titulo,
-                    genero,
-                    classificacao
-                )
-            `,
-      )
-      .eq("ingressos_vendidos", 0)
-      .order("data_hora", { ascending: true });
-
-    if (error) throw error;
+    const data = await consultarSessoesSemIngressosRegistrados();
 
     const linhas = (data ?? []).map((sessao) => [
       sessao.id_sessao,
-      escapeHTML(sessao.filmes?.titulo ?? "Filme não encontrado"),
-      escapeHTML(sessao.filmes?.genero ?? ""),
-      escapeHTML(sessao.filmes?.classificacao ?? ""),
+      escapeHTML(sessao.filme ?? "Filme não encontrado"),
+      escapeHTML(sessao.genero ?? ""),
+      escapeHTML(sessao.classificacao ?? ""),
       formatarDataHora(sessao.data_hora),
       Number(sessao.sala),
       formatarMoeda(sessao.preco),
@@ -502,7 +487,7 @@ async function relatorioSessoesSemVenda() {
     ]);
 
     renderizarTabelaRelatorioSessoes(
-      "Sessões sem venda",
+      "Sessões sem ingresso registrado",
       `Total encontrado: ${(data ?? []).length}.`,
       [
         "ID",
@@ -517,8 +502,14 @@ async function relatorioSessoesSemVenda() {
       linhas,
     );
   } catch (erro) {
-    mostrarErro(erro, "Não foi possível consultar sessões sem venda");
-    mostrarMensagemRelatorio("Sessões sem venda", "Erro ao gerar relatório.");
+    mostrarErro(
+      erro,
+      "Não foi possível consultar sessões sem ingresso registrado",
+    );
+    mostrarMensagemRelatorio(
+      "Sessões sem ingresso registrado",
+      "Erro ao gerar relatório.",
+    );
   }
 }
 
