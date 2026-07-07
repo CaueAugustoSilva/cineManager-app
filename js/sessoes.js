@@ -8,7 +8,6 @@ import {
   cadastrarSessao,
   atualizarSessao,
   excluirSessao,
-  consultarSessoesSemIngressosRegistrados,
 } from "./supabaseService.js";
 
 import {
@@ -112,15 +111,15 @@ async function carregarFilmesSelect() {
     filmes = await obterFilmes();
 
     selectFilme.innerHTML = `
-            <option value="">Selecione</option>
-            ${filmes
-              .map(
-                (filme) => `
-                <option value="${filme.id_filme}">${escapeHTML(filme.titulo)}</option>
-            `,
-              )
-              .join("")}
-        `;
+      <option value="">Selecione</option>
+      ${filmes
+        .map(
+          (filme) => `
+            <option value="${filme.id_filme}">${escapeHTML(filme.titulo)}</option>
+          `,
+        )
+        .join("")}
+    `;
   } catch (erro) {
     selectFilme.innerHTML = `<option value="">Erro ao carregar filmes</option>`;
     mostrarErro(erro, "Falha ao carregar filmes no select");
@@ -141,35 +140,35 @@ async function carregarSessoes() {
     tabela.innerHTML = sessoes
       .map(
         (sessao) => `
-            <tr>
-                <td>${sessao.id_sessao}</td>
-                <td>${escapeHTML(sessao.filmes?.titulo ?? "Filme não encontrado")}</td>
-                <td>${formatarDataHora(sessao.data_hora)}</td>
-                <td>${Number(sessao.sala)}</td>
-                <td>${formatarMoeda(sessao.preco)}</td>
-                <td>${Number(sessao.ingressos_vendidos ?? 0)}</td>
-                <td>
-                    <div class="acoes-tabela">
-                        <button 
-                            class="btn-acao btn-editar" 
-                            data-acao="editar" 
-                            data-id="${sessao.id_sessao}"
-                            title="Editar sessão"
-                            aria-label="Editar sessão">
-                            <span class="icone-acao">✎</span>
-                        </button>
+          <tr>
+            <td>${sessao.id_sessao}</td>
+            <td>${escapeHTML(sessao.filmes?.titulo ?? "Filme não encontrado")}</td>
+            <td>${formatarDataHora(sessao.data_hora)}</td>
+            <td>${Number(sessao.sala)}</td>
+            <td>${formatarMoeda(sessao.preco)}</td>
+            <td>${Number(sessao.ingressos_vendidos ?? 0)}</td>
+            <td>
+              <div class="acoes-tabela">
+                <button 
+                  class="btn-acao btn-editar" 
+                  data-acao="editar" 
+                  data-id="${sessao.id_sessao}"
+                  title="Editar sessão"
+                  aria-label="Editar sessão">
+                  <span class="icone-acao">✎</span>
+                </button>
 
-                        <button 
-                            class="btn-acao btn-excluir" 
-                            data-acao="excluir" 
-                            data-id="${sessao.id_sessao}"
-                            title="Excluir sessão"
-                            aria-label="Excluir sessão">
-                            <span class="icone-excluir">×</span>
-                        </button>
-                    </div>
-                </td>
-            </tr>
+                <button 
+                  class="btn-acao btn-excluir" 
+                  data-acao="excluir" 
+                  data-id="${sessao.id_sessao}"
+                  title="Excluir sessão"
+                  aria-label="Excluir sessão">
+                  <span class="icone-excluir">×</span>
+                </button>
+              </div>
+            </td>
+          </tr>
         `,
       )
       .join("");
@@ -230,27 +229,27 @@ function renderizarTabelaRelatorioSessoes(titulo, subtitulo, colunas, linhas) {
   }
 
   resultadoRelatorioSessoes.innerHTML = `
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle mb-0">
-                <thead class="table-dark">
-                    <tr>
-                        ${colunas.map((coluna) => `<th>${escapeHTML(coluna)}</th>`).join("")}
-                    </tr>
-                </thead>
-                <tbody>
-                    ${linhas
-                      .map(
-                        (linha) => `
-                        <tr>
-                            ${linha.map((celula) => `<td>${celula}</td>`).join("")}
-                        </tr>
-                    `,
-                      )
-                      .join("")}
-                </tbody>
-            </table>
-        </div>
-    `;
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle mb-0">
+        <thead class="table-dark">
+          <tr>
+            ${colunas.map((coluna) => `<th>${escapeHTML(coluna)}</th>`).join("")}
+          </tr>
+        </thead>
+        <tbody>
+          ${linhas
+            .map(
+              (linha) => `
+                <tr>
+                  ${linha.map((celula) => `<td>${celula}</td>`).join("")}
+                </tr>
+              `,
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
 
   cardRelatorioSessoes.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -280,9 +279,9 @@ function prepararModalFilmesSessoes() {
     .map(
       (filme) => `
         <button class="btn btn-outline-primary text-start" type="button" data-id-filme="${filme.id_filme}">
-            ${escapeHTML(filme.titulo)}
+          ${escapeHTML(filme.titulo)}
         </button>
-    `,
+      `,
     )
     .join("");
 }
@@ -301,9 +300,9 @@ function prepararModalGenerosSessoes() {
     .map(
       (genero, index) => `
         <button class="btn btn-outline-primary text-start" type="button" data-genero-index="${index}">
-            ${escapeHTML(genero)}
+          ${escapeHTML(genero)}
         </button>
-    `,
+      `,
     )
     .join("");
 }
@@ -401,19 +400,43 @@ async function consultarSessoesPorGenero(genero) {
     .from("sessoes")
     .select(
       `
-            id_sessao,
-            data_hora,
-            sala,
-            preco,
-            ingressos_vendidos,
-            filmes!inner (
-                titulo,
-                genero,
-                classificacao
-            )
-        `,
+        id_sessao,
+        data_hora,
+        sala,
+        preco,
+        ingressos_vendidos,
+        filmes!inner (
+          titulo,
+          genero,
+          classificacao
+        )
+      `,
     )
     .eq("filmes.genero", genero)
+    .order("data_hora", { ascending: true });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+async function consultarSessoesSemVenda() {
+  const { data, error } = await supabase
+    .from("sessoes")
+    .select(
+      `
+        id_sessao,
+        data_hora,
+        sala,
+        preco,
+        ingressos_vendidos,
+        filmes (
+          titulo,
+          genero,
+          classificacao
+        )
+      `,
+    )
+    .eq("ingressos_vendidos", 0)
     .order("data_hora", { ascending: true });
 
   if (error) throw error;
@@ -467,19 +490,16 @@ async function relatorioSessoesPorGenero(genero) {
 
 async function relatorioSessoesSemVenda() {
   modalConsultaSessoes.hide();
-  mostrarMensagemRelatorio(
-    "Sessões sem ingresso registrado",
-    "Carregando relatório...",
-  );
+  mostrarMensagemRelatorio("Sessões sem venda", "Carregando relatório...");
 
   try {
-    const data = await consultarSessoesSemIngressosRegistrados();
+    const data = await consultarSessoesSemVenda();
 
-    const linhas = (data ?? []).map((sessao) => [
+    const linhas = data.map((sessao) => [
       sessao.id_sessao,
-      escapeHTML(sessao.filme ?? "Filme não encontrado"),
-      escapeHTML(sessao.genero ?? ""),
-      escapeHTML(sessao.classificacao ?? ""),
+      escapeHTML(sessao.filmes?.titulo ?? "Filme não encontrado"),
+      escapeHTML(sessao.filmes?.genero ?? ""),
+      escapeHTML(sessao.filmes?.classificacao ?? ""),
       formatarDataHora(sessao.data_hora),
       Number(sessao.sala),
       formatarMoeda(sessao.preco),
@@ -487,8 +507,8 @@ async function relatorioSessoesSemVenda() {
     ]);
 
     renderizarTabelaRelatorioSessoes(
-      "Sessões sem ingresso registrado",
-      `Total encontrado: ${(data ?? []).length}.`,
+      "Sessões sem venda",
+      `Total encontrado: ${data.length}.`,
       [
         "ID",
         "Filme",
@@ -502,14 +522,8 @@ async function relatorioSessoesSemVenda() {
       linhas,
     );
   } catch (erro) {
-    mostrarErro(
-      erro,
-      "Não foi possível consultar sessões sem ingresso registrado",
-    );
-    mostrarMensagemRelatorio(
-      "Sessões sem ingresso registrado",
-      "Erro ao gerar relatório.",
-    );
+    mostrarErro(erro, "Não foi possível consultar sessões sem venda");
+    mostrarMensagemRelatorio("Sessões sem venda", "Erro ao gerar relatório.");
   }
 }
 
@@ -522,18 +536,18 @@ async function relatorioSessoesMaisVendidas() {
 
   try {
     const { data, error } = await supabase.from("ingressos").select(`
-                valor_pago,
-                sessoes (
-                    id_sessao,
-                    data_hora,
-                    sala,
-                    preco,
-                    ingressos_vendidos,
-                    filmes (
-                        titulo
-                    )
-                )
-            `);
+      valor_pago,
+      sessoes (
+        id_sessao,
+        data_hora,
+        sala,
+        preco,
+        ingressos_vendidos,
+        filmes (
+          titulo
+        )
+      )
+    `);
 
     if (error) throw error;
 
